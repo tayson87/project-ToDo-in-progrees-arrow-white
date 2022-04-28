@@ -5,7 +5,10 @@ const { upload } = require('../util/multer');
 const {
   loginUser,
   createUser,
-  updateUser
+  updateUser,
+  getAllUsers,
+  getUserById,
+  deleteUser
 } = require('../controllers/users.controller');
 
 // Middlewares
@@ -23,5 +26,11 @@ router.use(validateSession);
 router.post('/', protectAdmin, upload.single('image'), createUser);
 
 router.patch('/:id', updateUser);
+
+router.get('/', getAllUsers);
+
+router.get('/:id', getUserById);
+
+router.delete('/:id', deleteUser);
 
 module.exports = { usersRouter: router };

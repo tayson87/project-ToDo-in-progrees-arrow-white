@@ -74,3 +74,19 @@ exports.updateTask = catchAsync(async (req, res, next) => {
     status: 'success'
   });
 });
+
+exports.deleteTask = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const todo = await Todo.findOne({
+    where: { id }
+  });
+
+  if (!todo) {
+    return next(new AppError(404, 'todo   not found '));
+  }
+
+  await todo.update({ status: 'deleted' });
+
+  res.status(204).json({ status: 'success' });
+});
+

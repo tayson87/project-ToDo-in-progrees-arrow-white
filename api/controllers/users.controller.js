@@ -47,6 +47,39 @@ exports.loginUser = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.findAll({
+    attributes: { exclude: ['password'] },
+    where: { status: 'active' }
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: { users }
+  });
+});
+
+exports.getUserById = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const user = await User.findOne({
+    where: {
+      id
+    }
+  });
+
+  if (!user) {
+    return next(new AppError(404, 'user not found !'));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user
+    }
+  });
+});
+
 exports.createUser = catchAsync(async (req, res, next) => {
   const { name, lastName, age, email, password, role } = req.body;
   console.log(req.file);
@@ -97,4 +130,19 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success'
   });
+});
+
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+   const user = await User.findOne({
+    where: { id, status: 'active' }
+  });
+  if (!user) {
+    return next(new AppError(404, 'User   not found '));
+  }
+
+  await user.update({ status: 'deleted' });
+
+  res.status(204).json({ status: 'success' });
 });

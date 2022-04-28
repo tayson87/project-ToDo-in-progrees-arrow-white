@@ -5,7 +5,8 @@ const {
   createTask,
   getAllTask,
   getTaskById,
-  updateTask
+  updateTask,
+  deleteTask
 } = require('../controllers/todos.controller');
 
 // Middlewares
@@ -20,6 +21,6 @@ router.use(validateSession);
 
 router.route('/').post(protectAdmin, createTask).get(getAllTask);
 
-router.route('/:id').get(getTaskById).patch(updateTask);
+router.route('/:id').get(getTaskById).patch(updateTask).delete(deleteTask);
 
 module.exports = { todosRouter: router };
