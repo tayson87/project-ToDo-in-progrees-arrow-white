@@ -82,7 +82,7 @@ exports.getUserById = catchAsync(async (req, res, next) => {
 
 exports.createUser = catchAsync(async (req, res, next) => {
   const { name, lastName, age, email, password, role } = req.body;
-  console.log(req.file);
+  console.log(req.body);
   const salt = await bcrypt.genSalt(12);
   const hashedPassword = await bcrypt.hash(password, salt);
   // const image = req.file
@@ -95,6 +95,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
     password: hashedPassword,
     role
   });
+  console.log('image', req.file);
 
   const refImg = ref(storage, `/img/${newUser.id}/${req.file.originalname}`);
 
@@ -135,7 +136,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-   const user = await User.findOne({
+  const user = await User.findOne({
     where: { id, status: 'active' }
   });
   if (!user) {
